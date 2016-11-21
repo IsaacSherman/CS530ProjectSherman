@@ -73,3 +73,4 @@ while currentTime - wallTime < 600:
     thread8 = ArithmeticRunThread(8, "Thread-8", numSteps)
 
 print("Completed " + str(count) + " iterations in " + str(currentTime - wallTime) + "seconds")
+print("The total number of flops for this run was " + str(numSteps * 8 * 16))
