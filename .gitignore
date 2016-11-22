@@ -202,7 +202,8 @@ sdist/
 develop-eggs/
 .installed.cfg
 .idea/workspace.xml
-
+.idea/misc.xml
+.idea/CS530ProjectSherman.iml
 # Installer logs
 pip-log.txt
 
