@@ -2,6 +2,20 @@ import threading
 import time
 import numpy
 
+
+def FisherYatesShuffle(list):
+    for i in range(len(list) - 1, 0, -1):
+        fyj = numpy.random.random_integers(0, i)
+        list[i], list[fyj] = list[fyj], list[i]
+    return list
+
+
+indices = []
+indexSize = 32
+for j in range(0, 4):
+    indices.append(FisherYatesShuffle(list(range(0, indexSize))))
+
+
 class ArithmeticRunThread(threading.Thread):
     def __init__(self, threadID, name, numberOfSteps):
         threading.Thread.__init__(self)
@@ -12,23 +26,22 @@ class ArithmeticRunThread(threading.Thread):
     def run(self):
         self.execute()
 
+
     def execute(self):
         num = []
-        for i in range(0, 8):
+
+        for i in range(0, indexSize):
             num.append(numpy.random.random())
 
         for i in range(0, self.steps):
-            num[0] = num[3] * num[0] + num[1] * num[0]
-            num[2] = num[5] * num[2] + num[2] * num[7]
-            num[4] = num[7] * num[4] + num[3] * num[6]
-            num[6] = num[1] * num[6] + num[4] * num[5]
-            num[1] = num[2] * num[1] + num[5] * num[4]
-            num[3] = num[4] * num[3] + num[6] * num[3]
-            num[5] = num[6] * num[5] + num[7] * num[2]
-            num[7] = num[0] * num[7] + num[0] * num[1]
+            for j in range(0, indexSize):
+                num[j] = num[indices[0][j]]*num[indices[1][j]] + num[indices[2][j]] * num[indices[3][j]] + \
+                    num[indices[0][j]] * num[indices[2][j]] + num[indices[1][j]] * num[indices[3][j]] + \
+                    num[indices[0][j]]
 
 
-numSteps = 10000000
+
+numSteps = 1000000
 mainThread = threading.main_thread()
 thread1 = ArithmeticRunThread(1, "Thread-1", numSteps)
 thread2 = ArithmeticRunThread(2, "Thread-2", numSteps)
@@ -73,4 +86,4 @@ while currentTime - wallTime < 600:
     thread8 = ArithmeticRunThread(8, "Thread-8", numSteps)
 
 print("Completed " + str(count) + " iterations in " + str(currentTime - wallTime) + "seconds")
-print("The total number of flops for this run was " + str(numSteps * 8 * 16))
+print("The total number of flops for this run was " + str(numSteps * 8 * indexSize * 8))
