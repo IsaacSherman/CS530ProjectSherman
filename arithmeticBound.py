@@ -3,11 +3,15 @@ import time
 import numpy
 
 
+
+numpy.random.seed(13)
+
 def FisherYatesShuffle(list):
     for i in range(len(list) - 1, 0, -1):
         fyj = numpy.random.random_integers(0, i)
         list[i], list[fyj] = list[fyj], list[i]
     return list
+
 
 
 indices = []

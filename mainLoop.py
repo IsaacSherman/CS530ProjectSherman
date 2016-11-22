@@ -1,6 +1,6 @@
 import threading
 import time
-import numpy
+import random
 
 exitFlag = 0
 
@@ -14,48 +14,37 @@ class MemoryRunThread(threading.Thread):
         self.B = B
 
     def run(self):
-        #print("Starting " + self.name)
+        # print("Starting " + self.name)
         self.execute()
-        #print(self.res)
-        #print("Exiting " + self.name)
+        # print(self.res)
+        # print("Exiting " + self.name)
 
     def execute(self):
-        self.res = self.A * self.B
-
-
-class ArithmeticRunThread(threading.Thread):
-    def __init__(self, threadID, name, numberOfSteps):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.name = name
-        self.steps = numberOfSteps
-
-    def run(self):
-        self.execute()
-
-    def execute(self):
-        a = numpy.random.random()
-        b = numpy.random.random()
-        for i in range(0, self.steps):
-            a = a * b
-
+        result = [[0 for i in range(len(self.A))] for i in range(len(self.B[0]))]
+        for i in range(0, len(self.A)):
+            for j in range(0, len(self.B[0])):
+                res = 0
+                for k in range(0, len(self.B)):
+                    res += self.A[i][k] * self.B[k][j]
+                result[i][j] = res
+        del result
 
 
 # Create new threads
-dim = 4000000
-sqrtDim = 2000
+dim = 160000
+sqrtDim = 400
+random.seed = 13
 
-matrixA = numpy.random.random_sample(dim).reshape(sqrtDim, sqrtDim)
-matrixB = numpy.random.random_sample(dim).reshape(sqrtDim, sqrtDim)
-matrixC = numpy.random.random_sample(dim).reshape(sqrtDim, sqrtDim)
-matrixD = numpy.random.random_sample(dim).reshape(sqrtDim, sqrtDim)
+matrixA = [[random.random() for a in range(sqrtDim)] for a in range(sqrtDim)]
+matrixB = [[random.random() for a in range(sqrtDim)] for a in range(sqrtDim)]
+matrixC = [[random.random() for a in range(sqrtDim)] for a in range(sqrtDim)]
+matrixD = [[random.random() for a in range(sqrtDim)] for a in range(sqrtDim)]
 
 mainThread = threading.main_thread()
 thread1 = MemoryRunThread(1, "Thread-1", matrixA, matrixB)
 thread2 = MemoryRunThread(2, "Thread-2", matrixB, matrixC)
 thread3 = MemoryRunThread(3, "Thread-3", matrixC, matrixD)
 thread4 = MemoryRunThread(4, "Thread-4", matrixD, matrixA)
-
 
 count = 0
 processTime = time.time()
@@ -71,10 +60,10 @@ while currentTime - wallTime < 600:
     thread4.join()
     currentTime = time.clock()
     count += 1
-    #print("Ending iteration " + str(count) + " after " + str(currentTime - wallTime) + " seconds")
     thread1 = MemoryRunThread(1, "Thread-1", matrixA, matrixB)
     thread2 = MemoryRunThread(2, "Thread-2", matrixB, matrixC)
     thread3 = MemoryRunThread(3, "Thread-3", matrixC, matrixD)
     thread4 = MemoryRunThread(4, "Thread-4", matrixD, matrixA)
 
-print("Completed " + str(count) + " iterations in " + str(currentTime - wallTime) + "seconds")
+print("Completed " + str(count) + " iterations in " + str(currentTime - wallTime) +
+      " seconds, \n with " + str(sqrtDim ** 3 * 4) + " floating point operations")
