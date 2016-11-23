@@ -1,0 +1,2 @@
+Memory bound: 5 programs, 696.89, 699.15, 700.16, 701.37, 703.14 seconds, 256000000 Flops per program, 5 second interval polling
+Arithmetic :	4 programs, 612.5, 614.2, 615.15, 617.09 seconds, 20480000 Flops per program, 5 second interval polling
